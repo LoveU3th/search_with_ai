@@ -8,14 +8,27 @@ COPY . /app
 WORKDIR /app
 
 # 设置镜像源为腾讯云镜像源，加快依赖包下载速度
-RUN yarn config set registry https://mirrors.cloud.tencent.com/npm/
+RUN yarn config set registry https://mirrors.cloud.tencent.com/npm/ && \
+    yarn config set network-timeout 600000
 
+# 安装依赖
+# COPY package.json yarn.lock ./
+# RUN yarn install
 # 安装依赖并构建应用
 RUN yarn install && yarn run build
 
 # 构建 web 子项目
+# WORKDIR /app/web
+# COPY web/package.json web/yarn.lock ./
+# RUN for i in {1..5}; do yarn install && break || sleep 15; done
+
+# 构建 web 子项目
 WORKDIR /app/web
 RUN yarn install && yarn run build
+
+# # 复制代码并构建
+# COPY . /app
+# RUN yarn run build
 
 # 使用 node:18-alpine 作为基础镜像进行生产阶段
 FROM node:18-alpine
