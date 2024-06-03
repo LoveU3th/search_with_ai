@@ -42,7 +42,7 @@ RUN curl -fsS https://dotenvx.sh/ | sh
 # 复制环境变量文件和构建产物到生产镜像
 COPY .env /app
 COPY --from=build /app/dist ./dist
-COPY --from=build /app/src ./src
+COPY --from=build /app/backend ./backend
 COPY --from=build /app/web/build ./web/build
 COPY --from=build /app/package.json ./
 
